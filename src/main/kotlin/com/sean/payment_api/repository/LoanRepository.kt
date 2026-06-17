@@ -10,7 +10,7 @@ import java.math.BigDecimal
 @Repository
 interface LoanRepository: JpaRepository<Installment, String> {
     fun findByLoanId(loanId: String): List<Installment>
-    fun findByLoanStatus(loanId: String, status: InstallmentStatus): List<Installment>
-    fun findByPayment(paymentAmount: BigDecimal) : List<Installment>
-    fun findByLoanIdAndPayment(loanId: String, paymentAmount: BigDecimal): List<Installment>
+    fun findByLoanIdAndStatus(loanId: String, status: InstallmentStatus): List<Installment>
+    fun findByPaymentAmount(paymentAmount: BigDecimal): List<Installment>
+    fun findByLoanIdAndPaymentAmount(loanId: String, paymentAmount: BigDecimal): List<Installment>
 }

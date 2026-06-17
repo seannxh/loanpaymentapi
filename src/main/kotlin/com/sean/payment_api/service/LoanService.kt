@@ -21,9 +21,9 @@ class LoanService(private val loanRepository: LoanRepository){
     fun calculateSchedule(request: LoanRequest) : LoanScheduleRepayment {
 
         val loanId: String = UUID.randomUUID().toString()
-        val monthlyApr: BigDecimal = request.annualPercentageRate.divide(BigDecimal(12), 10, RoundingMode.HALF_UP)
-            .divide(BigDecimal(100), 10, RoundingMode.UP)
-
+        val monthlyApr: BigDecimal = request.annualPercentageRate
+            .divide(BigDecimal(12), 10, RoundingMode.HALF_UP)
+            .divide(BigDecimal(100), 10, RoundingMode.HALF_UP)
         val monthlyPayment = request.purchaseAmount.divide((BigDecimal(request.numberOfInstallments)), 2, RoundingMode.HALF_UP)
         var remainingBalance = request.purchaseAmount
         val installments = mutableListOf<Installment>()
@@ -43,7 +43,7 @@ class LoanService(private val loanRepository: LoanRepository){
                     status = InstallmentStatus.PENDING
                 )
             )
-
+            loanRepository.saveAll(installments)
         }
         return LoanScheduleRepayment(
             purchaseAmount = request.purchaseAmount,
