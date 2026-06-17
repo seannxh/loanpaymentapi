@@ -43,8 +43,9 @@ class LoanService(private val loanRepository: LoanRepository){
                     status = InstallmentStatus.PENDING
                 )
             )
-            loanRepository.saveAll(installments)
         }
+        loanRepository.saveAll(installments)
+
         return LoanScheduleRepayment(
             purchaseAmount = request.purchaseAmount,
             apr = request.annualPercentageRate,
