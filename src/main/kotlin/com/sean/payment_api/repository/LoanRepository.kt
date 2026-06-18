@@ -6,6 +6,7 @@ import org.apache.logging.log4j.util.Strings
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.math.BigDecimal
+import java.time.LocalDate
 
 @Repository
 interface LoanRepository: JpaRepository<Installment, String> {
@@ -13,4 +14,5 @@ interface LoanRepository: JpaRepository<Installment, String> {
     fun findByLoanIdAndStatus(loanId: String, status: InstallmentStatus): List<Installment>
     fun findByPaymentAmount(paymentAmount: BigDecimal): List<Installment>
     fun findByLoanIdAndPaymentAmount(loanId: String, paymentAmount: BigDecimal): List<Installment>
+    fun findByStatusAndDueDateBefore(status: InstallmentStatus, date: LocalDate): List<Installment>
 }

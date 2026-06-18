@@ -5,6 +5,7 @@ import com.sean.payment_api.data.InstallmentStatus
 import com.sean.payment_api.data.LoanRequest
 import com.sean.payment_api.data.LoanScheduleRepayment
 import com.sean.payment_api.repository.LoanRepository
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.transaction.annotation.Transactional
 
 import org.springframework.stereotype.Service
@@ -18,6 +19,8 @@ import java.util.*
 class LoanService(private val loanRepository: LoanRepository){
 
     //class ResourceNotFoundException(message: String) : RuntimeException(message)
+
+    // Either complete the whole service or exit out all or none
     @Transactional
     fun calculateSchedule(request: LoanRequest) : LoanScheduleRepayment {
 
@@ -55,6 +58,7 @@ class LoanService(private val loanRepository: LoanRepository){
             installments = installments
         )
     }
+
     @Transactional(readOnly = true)
     fun getInstallments(loanId: String): List<Installment> {
         return loanRepository.findByLoanId(loanId)
@@ -73,4 +77,14 @@ class LoanService(private val loanRepository: LoanRepository){
         return loanRepository.save(updated)
     }
 
+    @Scheduled(fixedRate = 60000)
+    @Transactional
+    fun checkOverdueInstallments() {
+        val overDueInstallments = loanRepository.findByStatusAndDueDateBefore(
+            InstallmentStatus.PENDING,
+            LocalDate.now()
+        )
+        val updated = overDueInstallments.map {it.copy(status = InstallmentStatus.OVERDUE)}
+        loanRepository.saveAll(updated)
+    }
 }

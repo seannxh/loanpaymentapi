@@ -21,16 +21,16 @@ import org.springframework.web.bind.annotation.RestController
 class LoanController(private val loanService: LoanService) {
 
     @PostMapping("/calculate")
-    fun calculateLoan(@RequestBody request: LoanRequest): LoanScheduleRepayment{
+    fun calculateLoan(@Valid @RequestBody request: LoanRequest): LoanScheduleRepayment{
         return loanService.calculateSchedule(request)
     }
     @GetMapping("/{loanId}/installments")
-    fun getUserInstallments(@PathVariable loanId: String): List<Installment>{
+    fun getUserInstallments(@Valid @PathVariable loanId: String): List<Installment>{
         return loanService.getInstallments(loanId)
     }
 
     @PatchMapping("/installments/{installmentId}")
-    fun updateInstallment(@PathVariable installmentId: String, @RequestBody updateStatusRequest: UpdateStatusRequest): Installment{
+    fun updateInstallment(@Valid @PathVariable installmentId: String, @RequestBody updateStatusRequest: UpdateStatusRequest): Installment{
         return loanService.updateStatus(installmentId, updateStatusRequest.status)
     }
 
