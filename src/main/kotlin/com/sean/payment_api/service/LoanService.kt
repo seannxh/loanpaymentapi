@@ -5,19 +5,20 @@ import com.sean.payment_api.data.InstallmentStatus
 import com.sean.payment_api.data.LoanRequest
 import com.sean.payment_api.data.LoanScheduleRepayment
 import com.sean.payment_api.repository.LoanRepository
-import jakarta.persistence.Id
+import org.springframework.transaction.annotation.Transactional
+
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDate
 import java.util.*
-import kotlin.reflect.jvm.internal.impl.serialization.deserialization.FlexibleTypeDeserializer.ThrowException
+
 
 @Service
 class LoanService(private val loanRepository: LoanRepository){
 
     //class ResourceNotFoundException(message: String) : RuntimeException(message)
-
+    @Transactional
     fun calculateSchedule(request: LoanRequest) : LoanScheduleRepayment {
 
         val loanId: String = UUID.randomUUID().toString()
@@ -54,11 +55,11 @@ class LoanService(private val loanRepository: LoanRepository){
             installments = installments
         )
     }
-
+    @Transactional(readOnly = true)
     fun getInstallments(loanId: String): List<Installment> {
         return loanRepository.findByLoanId(loanId)
     }
-
+    @Transactional
     fun updateStatus(installmentId: String, status: InstallmentStatus): Installment{
         val installment = loanRepository.findById(installmentId)
             .orElseThrow{IllegalStateException("Installment Not Found")}
