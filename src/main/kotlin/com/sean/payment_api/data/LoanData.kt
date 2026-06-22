@@ -43,8 +43,12 @@ data class Installment(
     val interest: BigDecimal,
     val remainingBalance: BigDecimal,
     @Enumerated(EnumType.STRING)
-    val status: InstallmentStatus = InstallmentStatus.PENDING
+    val status: InstallmentStatus = InstallmentStatus.PENDING,
 
+    // Set once an upcoming-payment reminder email has been sent, so the
+    // scheduler doesn't email the same installment repeatedly.
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    val reminderSent: Boolean = false,
 )
 
 
